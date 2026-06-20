@@ -28,7 +28,7 @@ Dein Feed. Deine Regeln.
    Empfohlen: [Violentmonkey](https://violentmonkey.github.io/) oder [Tampermonkey](https://www.tampermonkey.net/)
 
 2. **Script installieren**  
-   → **[Jetzt installieren](https://raw.githubusercontent.com/pantherpink/GEZ-Channels-Youtube/refs/heads/main/GEZ-frei.user.js)**
+   → **[Jetzt installieren](https://raw.githubusercontent.com/finalish0/GEZ-Channels-Youtube/refs/heads/main/GEZ-frei.user.js)**
 
 3. **Fertig!**  
    Öffne YouTube – das Script läuft automatisch und aktualisiert sich selbst.

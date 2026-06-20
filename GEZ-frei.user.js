@@ -3,16 +3,16 @@
 // @namespace Violentmonkey Scripts
 // @match https://www.youtube.com/*
 // @grant GM_xmlhttpRequest
-// @version 2.0.4
+// @version 2.0.5
 // @author -
 // @description 1/20/2024, 2:38:58 PM - Updated with GitHub integration + lockup support
-// @updateURL https://raw.githubusercontent.com/pantherpink/GEZ-Channels-Youtube/refs/heads/main/GEZ-frei.user.js
-// @downloadURL https://raw.githubusercontent.com/pantherpink/GEZ-Channels-Youtube/refs/heads/main/GEZ-frei.user.js
+// @updateURL https://raw.githubusercontent.com/finalish0/GEZ-Channels-Youtube/refs/heads/main/GEZ-frei.user.js
+// @downloadURL https://raw.githubusercontent.com/finalish0/GEZ-Channels-Youtube/refs/heads/main/GEZ-frei.user.js
 // ==/UserScript==
 
 // Konfiguration
 const CONFIG = {
-    GITHUB_URL: 'https://raw.githubusercontent.com/pantherpink/GEZ-Channels-Youtube/refs/heads/main/GEZ-Channels.txt',
+    GITHUB_URL: 'https://raw.githubusercontent.com/finalish0/GEZ-Channels-Youtube/refs/heads/main/GEZ-Channels.txt',
     CACHE_KEY: 'gezChannelsList',
     CACHE_TIMESTAMP_KEY: 'gezChannelsListTimestamp',
     UPDATE_INTERVAL: 24 * 60 * 60 * 1000, // 24 Stunden in Millisekunden
