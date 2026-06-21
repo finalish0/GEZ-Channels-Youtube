@@ -3,24 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GEZ-frei - YouTube ohne Rundfunkbeitrag</title>
-    <meta name="description" content="Browser-Userscript das GEZ-finanzierte Kanäle auf YouTube automatisch ausblendet.">
+    <title>GEZ-FREI.ONLINE — YouTube ohne Rundfunkbeitrag</title>
+    <meta name="description" content="GEZ-FREI.ONLINE — Browser-Userscript, das GEZ-finanzierte Kanäle auf YouTube automatisch ausblendet.">
+    <meta name="theme-color" content="#0a0a0a">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="canonical" href="https://gez-frei.online/">
+    <meta property="og:title" content="GEZ-FREI.ONLINE — YouTube ohne Rundfunkbeitrag">
+    <meta property="og:description" content="Browser-Userscript, das GEZ-finanzierte Kanäle auf YouTube automatisch ausblendet. Neues YouTube-Layout unterstützt.">
+    <meta property="og:url" content="https://gez-frei.online/">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="de_DE">
+    <meta property="og:site_name" content="GEZ-FREI.ONLINE">
+    <meta property="og:image" content="https://gez-frei.online/og-image.jpg">
+    <meta property="og:image:width" content="1280">
+    <meta property="og:image:height" content="720">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="GEZ-FREI.ONLINE — YouTube ohne Rundfunkbeitrag">
+    <meta name="twitter:description" content="Browser-Userscript, das GEZ-finanzierte Kanäle auf YouTube automatisch ausblendet.">
+    <meta name="twitter:image" content="https://gez-frei.online/og-image.jpg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-primary: #0a0a0b;
-            --bg-secondary: #111113;
-            --bg-card: #16161a;
-            --bg-glass: rgba(22, 22, 26, 0.7);
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #111111;
+            --bg-card: #161616;
+            --bg-glass: rgba(10, 10, 10, 0.78);
             --text-primary: #fafafa;
-            --text-secondary: #a1a1aa;
-            --accent: #3b82f6;
-            --accent-glow: rgba(59, 130, 246, 0.4);
-            --gradient-1: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
-            --gradient-2: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+            --text-secondary: #a3a3a3;
+            --text-on-accent: #0a0a0a;
+            --accent: #facc15;
+            --accent-light: #fde047;
+            --accent-cream: #fde68a;
+            --accent-glow: rgba(250, 204, 21, 0.35);
+            --gradient-1: linear-gradient(135deg, #ca8a04 0%, #facc15 45%, #fde68a 78%, #fff1cc 100%);
+            --gradient-2: linear-gradient(135deg, #a16207 0%, #eab308 55%, #fde68a 100%);
             --border: rgba(255, 255, 255, 0.08);
+            --border-accent: rgba(250, 204, 21, 0.28);
             --radius: 16px;
             --radius-sm: 8px;
         }
@@ -62,8 +82,8 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle at 30% 20%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
-                        radial-gradient(circle at 70% 80%, rgba(139, 92, 246, 0.06) 0%, transparent 50%);
+            background: radial-gradient(circle at 30% 20%, rgba(250, 204, 21, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 80%, rgba(253, 230, 138, 0.06) 0%, transparent 50%);
             animation: drift 20s ease-in-out infinite;
         }
 
@@ -86,30 +106,87 @@
             right: 0;
             z-index: 100;
             padding: 16px 0;
-            background: var(--bg-glass);
-            backdrop-filter: blur(20px);
+            background: rgba(10, 10, 10, 0.94);
             border-bottom: 1px solid var(--border);
         }
 
-        nav .container {
+        .nav-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 16px;
+        }
+
+        .nav-toggle {
+            display: none;
+            position: relative;
+            z-index: 102;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            width: 44px;
+            height: 44px;
+            padding: 10px;
+            background: rgba(10, 10, 10, 0.9);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .nav-toggle span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background: var(--text-primary);
+            border-radius: 1px;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        .nav-toggle[aria-expanded="true"] span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+
+        .nav-toggle[aria-expanded="true"] span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .nav-toggle[aria-expanded="true"] span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
+        body.nav-open {
+            overflow: hidden;
         }
 
         .logo {
             font-weight: 700;
-            font-size: 1.25rem;
+            font-size: clamp(0.8rem, 2.5vw, 0.95rem);
+            letter-spacing: 0.06em;
+            text-decoration: none;
+            white-space: nowrap;
             background: var(--gradient-1);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
+        h1 .brand-domain {
+            display: inline-block;
+            font-size: clamp(1.75rem, 5.5vw, 3.25rem);
+            letter-spacing: 0.04em;
+        }
+
         .nav-links {
             display: flex;
+            align-items: center;
             gap: 32px;
             list-style: none;
+        }
+
+        .nav-links li {
+            display: flex;
+            align-items: center;
         }
 
         .nav-links a {
@@ -117,11 +194,26 @@
             text-decoration: none;
             font-size: 0.9rem;
             font-weight: 500;
+            line-height: 1;
             transition: color 0.2s;
         }
 
         .nav-links a:hover {
-            color: var(--text-primary);
+            color: var(--accent-light);
+        }
+
+        .nav-links .icon-link {
+            line-height: 0;
+        }
+
+        .nav-links .icon-link svg {
+            display: block;
+        }
+
+        .nav-social-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         /* Hero Section */
@@ -146,7 +238,7 @@
         .badge-dot {
             width: 8px;
             height: 8px;
-            background: #22c55e;
+            background: var(--accent);
             border-radius: 50%;
             animation: pulse 2s infinite;
         }
@@ -182,7 +274,67 @@
             display: flex;
             gap: 16px;
             justify-content: center;
-            flex-wrap: wrap;
+            align-items: stretch;
+            width: 100%;
+            max-width: 520px;
+            margin: 0 auto;
+        }
+
+        .cta-manager,
+        .cta-group > .btn-primary {
+            flex: 1 1 0;
+            min-width: 0;
+        }
+
+        .cta-group > .btn-primary {
+            justify-content: center;
+        }
+
+        .cta-manager {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 14px 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            box-sizing: border-box;
+        }
+
+        .cta-manager-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-align: center;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .cta-manager-links {
+            display: flex;
+            gap: 8px;
+            min-width: 0;
+            width: 100%;
+        }
+
+        .btn-browser {
+            flex: 1 1 0;
+            min-width: 0;
+            justify-content: center;
+            padding: 10px 8px;
+            font-size: 0.8rem;
+            gap: 6px;
+        }
+
+        .btn-browser svg {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+
+        .btn-browser svg.icon-fill {
+            fill: currentColor;
+            stroke: none;
         }
 
         .btn {
@@ -201,7 +353,7 @@
 
         .btn-primary {
             background: var(--gradient-1);
-            color: white;
+            color: var(--text-on-accent);
             box-shadow: 0 4px 20px var(--accent-glow);
         }
 
@@ -218,7 +370,7 @@
 
         .btn-secondary:hover {
             background: var(--bg-secondary);
-            border-color: rgba(255, 255, 255, 0.15);
+            border-color: var(--border-accent);
         }
 
         /* Preview Section */
@@ -260,10 +412,10 @@
             line-height: 1.8;
         }
 
-        .preview-content .comment { color: #6b7280; }
-        .preview-content .keyword { color: #c084fc; }
-        .preview-content .string { color: #4ade80; }
-        .preview-content .function { color: #60a5fa; }
+        .preview-content .comment { color: #737373; }
+        .preview-content .keyword { color: var(--accent-light); }
+        .preview-content .string { color: var(--accent-cream); }
+        .preview-content .function { color: var(--accent); }
 
         /* Features Section */
         .features {
@@ -305,9 +457,9 @@
         }
 
         .feature-card:hover {
-            border-color: rgba(59, 130, 246, 0.3);
+            border-color: var(--border-accent);
             transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25), 0 0 40px rgba(250, 204, 21, 0.06);
         }
 
         .feature-icon {
@@ -316,10 +468,25 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: var(--gradient-1);
+            background: var(--gradient-2);
             border-radius: 12px;
-            font-size: 1.5rem;
             margin-bottom: 20px;
+            color: var(--text-on-accent);
+        }
+
+        .feature-icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .feature-icon svg.icon-fill {
+            fill: currentColor;
+            stroke: none;
         }
 
         .feature-card h3 {
@@ -341,9 +508,15 @@
 
         .steps {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: 1fr;
             gap: 40px;
             margin-top: 60px;
+        }
+
+        @media (min-width: 768px) {
+            .steps {
+                grid-template-columns: repeat(3, 1fr);
+            }
         }
 
         .step {
@@ -358,6 +531,7 @@
             align-items: center;
             justify-content: center;
             background: var(--gradient-1);
+            color: var(--text-on-accent);
             border-radius: 50%;
             font-size: 1.5rem;
             font-weight: 700;
@@ -410,6 +584,7 @@
             align-items: center;
             justify-content: center;
             background: var(--accent);
+            color: var(--text-on-accent);
             border-radius: 50%;
             font-weight: 600;
             font-size: 0.9rem;
@@ -434,6 +609,17 @@
 
         .install-step-content a:hover {
             text-decoration: underline;
+        }
+
+        .install-browser-links {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .install-browser-links .btn-browser {
+            min-width: 140px;
         }
 
         .code-block {
@@ -474,6 +660,17 @@
         .info-content p {
             color: var(--text-secondary);
             margin-bottom: 16px;
+        }
+
+        .info-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .nav-top {
+            display: none;
         }
 
         .info-visual {
@@ -524,7 +721,7 @@
         }
 
         .footer-links a:hover {
-            color: var(--text-primary);
+            color: var(--accent-light);
         }
 
         .footer-copy {
@@ -532,49 +729,227 @@
             font-size: 0.85rem;
         }
 
+        .icon-link {
+            display: inline-flex;
+            align-items: center;
+            color: var(--text-secondary);
+            transition: color 0.2s;
+        }
+
+        .icon-link:hover {
+            color: var(--accent-light);
+        }
+
+        .icon-link svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Tablet / narrow screens */
+        @media (max-width: 900px) {
+            .cta-group {
+                flex-direction: column;
+                max-width: 100%;
+                width: 100%;
+            }
+
+            .cta-manager,
+            .cta-group > .btn-primary {
+                width: 100%;
+                flex: none;
+            }
+        }
+
         /* Mobile */
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 16px;
+            }
+
+            .nav-toggle {
+                display: flex;
+            }
+
             .nav-links {
                 display: none;
+                position: fixed;
+                inset: 0;
+                z-index: 101;
+                flex-direction: column;
+                align-items: stretch;
+                justify-content: flex-start;
+                gap: 0;
+                margin: 0;
+                padding: 88px 16px 32px;
+                background: rgba(10, 10, 10, 0.98);
+                border-top: none;
+                overflow: hidden;
+            }
+
+            .nav-links.is-open {
+                display: flex;
+            }
+
+            .nav-links li {
+                border-bottom: 1px solid var(--border);
+            }
+
+            .nav-links li.nav-social {
+                border-bottom: none;
+                margin-top: 8px;
+            }
+
+            .nav-links a {
+                display: block;
+                padding: 16px 4px;
+                font-size: 1.05rem;
+            }
+
+            .nav-social-links {
+                display: flex;
+                justify-content: center;
+                gap: 20px;
+                padding: 12px 0 4px;
+            }
+
+            .nav-social-links .icon-link {
+                width: 44px;
+                height: 44px;
+                justify-content: center;
+                border: 1px solid var(--border);
+                border-radius: var(--radius-sm);
             }
 
             .hero {
-                padding: 120px 0 60px;
+                padding: 112px 0 48px;
+            }
+
+            .badge {
+                font-size: 0.78rem;
+                text-align: center;
+                line-height: 1.4;
+            }
+
+            .hero-subtitle {
+                font-size: 1.05rem;
+            }
+
+            .preview {
+                margin-top: 40px;
+            }
+
+            .preview-content {
+                padding: 16px;
+                font-size: 0.78rem;
+            }
+
+            .features,
+            .how-it-works,
+            .installation,
+            .channel-info {
+                padding: 72px 0;
+            }
+
+            .section-header {
+                margin-bottom: 40px;
+            }
+
+            .nav-top {
+                display: list-item;
             }
 
             .cta-group {
                 flex-direction: column;
-                align-items: center;
+                max-width: 100%;
+                width: 100%;
             }
 
-            .btn {
+            .cta-manager,
+            .cta-group > .btn-primary {
                 width: 100%;
-                justify-content: center;
+                flex: none;
+            }
+
+            .cta-manager {
+                padding: 16px;
+            }
+
+            .cta-manager-links {
+                flex-direction: column;
+            }
+
+            .btn-browser {
+                width: 100%;
             }
 
             .install-card {
-                padding: 24px;
+                padding: 20px;
             }
 
             .install-step {
                 flex-direction: column;
                 gap: 12px;
             }
+
+            .install-browser-links {
+                flex-direction: column;
+            }
+
+            .install-browser-links .btn-browser {
+                width: 100%;
+                min-width: 0;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .footer-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .info-actions {
+                flex-direction: column;
+            }
+
+            .info-actions .btn {
+                width: 100%;
+                justify-content: center;
+            }
         }
     </style>
 </head>
-<body>
+<body id="top">
     <div class="bg-gradient"></div>
 
     <nav>
-        <div class="container">
-            <div class="logo">GEZ-frei</div>
-            <ul class="nav-links">
+        <div class="container nav-bar">
+            <a href="#top" class="logo">GEZ-FREI.ONLINE</a>
+            <ul class="nav-links" id="nav-menu">
+                <li class="nav-top"><a href="#top">Home</a></li>
                 <li><a href="#features">Features</a></li>
                 <li><a href="#installation">Installation</a></li>
                 <li><a href="#how-it-works">Funktionsweise</a></li>
-                <li><a href="https://github.com/finalish0/GEZ-Channels-Youtube">GitHub</a></li>
+                <li><a href="#mitmachen">Mitmachen</a></li>
+                <li class="nav-social">
+                    <div class="nav-social-links">
+                        <a href="https://github.com/finalish0/GEZ-Channels-Youtube" class="icon-link" aria-label="GitHub">
+                            <svg fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+                        </a>
+                        <a href="https://x.com/finalish0" class="icon-link" aria-label="X">
+                            <svg fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                        </a>
+                    </div>
+                </li>
             </ul>
+            <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-menu" aria-label="Menü öffnen">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </div>
     </nav>
 
@@ -582,20 +957,29 @@
         <div class="container">
             <div class="badge">
                 <span class="badge-dot"></span>
-                Version 2.0.5 mit Auto-Updates
+                Version 2.0.5 · Neues YouTube-Layout unterstützt
             </div>
-            <h1>YouTube.<br><span>GEZ-frei.</span></h1>
+            <h1>YouTube.<br><span class="brand-domain">GEZ-FREI.ONLINE</span></h1>
             <p class="hero-subtitle">
                 Ein Browser-Userscript, das Inhalte von GEZ-finanzierten Kanälen auf YouTube automatisch ausblendet. Dein Feed, deine Regeln.
             </p>
             <div class="cta-group">
+                <div class="cta-manager">
+                    <span class="cta-manager-label">Zuerst ViolentMonkey</span>
+                    <div class="cta-manager-links">
+                        <a href="https://chromewebstore.google.com/detail/violentmonkey/jinjgcalfndblagaompednleahnlokjn" class="btn btn-secondary btn-browser" target="_blank" rel="noopener noreferrer" aria-label="ViolentMonkey für Chrome">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="21.17" y1="8" x2="12" y2="8"/><line x1="3.95" y1="6.06" x2="8.54" y2="14"/><line x1="10.88" y1="21.94" x2="15.46" y2="14"/></svg>
+                            Chrome
+                        </a>
+                        <a href="https://addons.mozilla.org/firefox/addon/violentmonkey/" class="btn btn-secondary btn-browser" target="_blank" rel="noopener noreferrer" aria-label="ViolentMonkey für Firefox">
+                            <svg class="icon-fill" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 23c-2.838 0-4.928-1.542-4.928-4.7 0-2.22 1.329-4.544 3.094-6.282V9.38c-.872.322-1.829 1.01-2.383 1.843l-.004-.002C6.71 8.608 5.66 5.6 6.929 2.842 8.673 5.76 11.227 7.404 13.6 7.96c.714-2.657 2.653-4.23 4.476-4.23 1.058 0 2.066.435 2.794 1.192C19.046 3.11 20.2 4.14 20.2 5.92c0 1.416-.77 2.567-1.96 3.318.48.818.74 1.738.74 2.76 0 2.342-1.85 4.23-4.204 4.23-.98 0-1.87-.32-2.57-.86z"/></svg>
+                            Firefox
+                        </a>
+                    </div>
+                </div>
                 <a href="https://raw.githubusercontent.com/finalish0/GEZ-Channels-Youtube/refs/heads/main/GEZ-frei.user.js" class="btn btn-primary">
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-                    Jetzt installieren
-                </a>
-                <a href="https://github.com/finalish0/GEZ-Channels-Youtube" class="btn btn-secondary">
-                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
-                    GitHub
+                    Userscript installieren
                 </a>
             </div>
 
@@ -625,32 +1009,44 @@
             </div>
             <div class="features-grid">
                 <div class="feature-card">
-                    <div class="feature-icon">🚫</div>
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>
+                    </div>
                     <h3>Automatisches Ausblenden</h3>
                     <p>Videos und Empfehlungen von GEZ-finanzierten Kanälen werden automatisch aus deinem Feed entfernt.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">🔄</div>
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
+                    </div>
                     <h3>Auto-Updates</h3>
                     <p>Das Script aktualisiert sich automatisch. Neue Kanäle werden erkannt, ohne dass du etwas tun musst.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">☁️</div>
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
+                    </div>
                     <h3>Cloud-Kanalliste</h3>
                     <p>Die Kanalliste wird von GitHub geladen und täglich aktualisiert. Immer auf dem neuesten Stand.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">⚡</div>
+                    <div class="feature-icon">
+                        <svg class="icon-fill" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                    </div>
                     <h3>Performance-optimiert</h3>
                     <p>Intelligentes Caching und Debouncing sorgen für minimale CPU-Last beim Browsen.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">🎯</div>
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                    </div>
                     <h3>Umfassende Abdeckung</h3>
                     <p>Funktioniert auf der Startseite, in der Suche, in der Seitenleiste und sogar im Endscreen von Videos.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">🛠️</div>
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                    </div>
                     <h3>Debug-Tools</h3>
                     <p>Eingebaute Konsolen-Befehle zum Debuggen, manuellen Updaten und Cache-Management.</p>
                 </div>
@@ -677,13 +1073,8 @@
                 </div>
                 <div class="step">
                     <div class="step-number">3</div>
-                    <h3>Kanäle abgleichen</h3>
-                    <p>Jedes Video wird mit der Kanalliste verglichen. Stimmt der Kanalname überein? Dann wird es versteckt.</p>
-                </div>
-                <div class="step">
-                    <div class="step-number">4</div>
-                    <h3>Sauberer Feed</h3>
-                    <p>Du siehst nur noch Inhalte von Kanälen, die nicht durch den Rundfunkbeitrag finanziert werden.</p>
+                    <h3>Kanäle ausblenden</h3>
+                    <p>Jedes Video wird mit der Kanalliste verglichen. Treffer werden entfernt — du siehst nur noch Inhalte ohne Rundfunkbeitrag.</p>
                 </div>
             </div>
         </div>
@@ -701,7 +1092,17 @@
                         <div class="install-step-num">1</div>
                         <div class="install-step-content">
                             <h4>Userscript-Manager installieren</h4>
-                            <p>Du brauchst einen Userscript-Manager wie <a href="https://violentmonkey.github.io/" target="_blank">Violentmonkey</a> oder <a href="https://www.tampermonkey.net/" target="_blank">Tampermonkey</a>. Beide sind kostenlos und für alle gängigen Browser verfügbar.</p>
+                            <p>Installiere <a href="https://violentmonkey.github.io/" target="_blank" rel="noopener noreferrer">ViolentMonkey</a> — alternativ geht auch <a href="https://www.tampermonkey.net/" target="_blank" rel="noopener noreferrer">Tampermonkey</a>.</p>
+                            <div class="install-browser-links">
+                                <a href="https://chromewebstore.google.com/detail/violentmonkey/jinjgcalfndblagaompednleahnlokjn" class="btn btn-secondary btn-browser" target="_blank" rel="noopener noreferrer" aria-label="ViolentMonkey für Chrome">
+                                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="21.17" y1="8" x2="12" y2="8"/><line x1="3.95" y1="6.06" x2="8.54" y2="14"/><line x1="10.88" y1="21.94" x2="15.46" y2="14"/></svg>
+                                    Chrome
+                                </a>
+                                <a href="https://addons.mozilla.org/firefox/addon/violentmonkey/" class="btn btn-secondary btn-browser" target="_blank" rel="noopener noreferrer" aria-label="ViolentMonkey für Firefox">
+                                    <svg class="icon-fill" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 23c-2.838 0-4.928-1.542-4.928-4.7 0-2.22 1.329-4.544 3.094-6.282V9.38c-.872.322-1.829 1.01-2.383 1.843l-.004-.002C6.71 8.608 5.66 5.6 6.929 2.842 8.673 5.76 11.227 7.404 13.6 7.96c.714-2.657 2.653-4.23 4.476-4.23 1.058 0 2.066.435 2.794 1.192C19.046 3.11 20.2 4.14 20.2 5.92c0 1.416-.77 2.567-1.96 3.318.48.818.74 1.738.74 2.76 0 2.342-1.85 4.23-4.204 4.23-.98 0-1.87-.32-2.57-.86z"/></svg>
+                                    Firefox
+                                </a>
+                            </div>
                         </div>
                     </div>
                     <div class="install-step">
@@ -723,14 +1124,14 @@
                 <div style="text-align: center; margin-top: 32px;">
                     <a href="https://raw.githubusercontent.com/finalish0/GEZ-Channels-Youtube/refs/heads/main/GEZ-frei.user.js" class="btn btn-primary">
                         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-                        Script installieren
+                        Userscript installieren
                     </a>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="channel-info">
+    <section class="channel-info" id="mitmachen">
         <div class="container">
             <div class="info-grid">
                 <div class="info-content">
@@ -738,9 +1139,14 @@
                     <p>Die Liste der GEZ-finanzierten Kanäle wird zentral auf GitHub gepflegt und regelmäßig aktualisiert.</p>
                     <p>Du kannst selbst Kanäle zur Liste hinzufügen, indem du einen Pull Request auf GitHub erstellst oder ein Issue öffnest.</p>
                     <p>Die Liste unterstützt Kommentare mit # und wird alle 24 Stunden automatisch synchronisiert.</p>
-                    <a href="https://github.com/finalish0/GEZ-Channels-Youtube/blob/main/GEZ-Channels.txt" class="btn btn-secondary" style="margin-top: 16px;">
-                        Kanalliste ansehen
-                    </a>
+                    <div class="info-actions">
+                        <a href="https://github.com/finalish0/GEZ-Channels-Youtube/issues" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                            Mitmachen
+                        </a>
+                        <a href="https://github.com/finalish0/GEZ-Channels-Youtube/blob/main/GEZ-Channels.txt" class="btn btn-secondary">
+                            Kanalliste ansehen
+                        </a>
+                    </div>
                 </div>
                 <div class="info-visual">
                     <div class="channel-list-preview">
@@ -766,10 +1172,41 @@
                     <a href="https://github.com/finalish0/GEZ-Channels-Youtube">GitHub</a>
                     <a href="https://github.com/finalish0/GEZ-Channels-Youtube/issues">Issues</a>
                     <a href="https://github.com/finalish0/GEZ-Channels-Youtube/blob/main/LICENSE">Lizenz</a>
+                    <a href="https://x.com/finalish0" class="icon-link" aria-label="X">
+                        <svg fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    </a>
                 </div>
-                <p class="footer-copy">Made with purpose. Open Source.</p>
+                <p class="footer-copy">GEZ-FREI.ONLINE — Open Source.</p>
             </div>
         </div>
     </footer>
+    <script>
+        (function () {
+            const toggle = document.querySelector('.nav-toggle');
+            const menu = document.querySelector('.nav-links');
+            if (!toggle || !menu) return;
+
+            function setMenuOpen(open) {
+                menu.classList.toggle('is-open', open);
+                toggle.setAttribute('aria-expanded', String(open));
+                toggle.setAttribute('aria-label', open ? 'Menü schließen' : 'Menü öffnen');
+                document.body.classList.toggle('nav-open', open);
+            }
+
+            toggle.addEventListener('click', function () {
+                setMenuOpen(!menu.classList.contains('is-open'));
+            });
+
+            menu.querySelectorAll('a[href^="#"]').forEach(function (link) {
+                link.addEventListener('click', function () {
+                    setMenuOpen(false);
+                });
+            });
+
+            window.addEventListener('resize', function () {
+                if (window.innerWidth > 768) setMenuOpen(false);
+            });
+        })();
+    </script>
 </body>
 </html>
