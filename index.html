@@ -305,7 +305,7 @@
             justify-content: center;
             align-items: stretch;
             width: 100%;
-            max-width: 520px;
+            max-width: 720px;
             margin: 0 auto;
         }
 
@@ -344,6 +344,23 @@
             gap: 8px;
             min-width: 0;
             width: 100%;
+        }
+
+        .cta-manager-note,
+        .install-browser-note {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-align: center;
+            line-height: 1.45;
+            margin: 0;
+        }
+
+        .cta-manager-note {
+            margin-top: 2px;
+        }
+
+        .install-browser-note {
+            margin-top: 12px;
         }
 
         .btn-browser {
@@ -1020,9 +1037,9 @@
             </p>
             <div class="cta-group">
                 <div class="cta-manager">
-                    <span class="cta-manager-label">Zuerst ViolentMonkey</span>
+                    <span class="cta-manager-label">Zuerst Userscript-Manager</span>
                     <div class="cta-manager-links">
-                        <a href="https://chromewebstore.google.com/detail/violentmonkey/jinjaccalgkegednnccohejagnlnfdag" class="btn btn-secondary btn-browser" target="_blank" rel="noopener noreferrer" aria-label="ViolentMonkey für Chrome">
+                        <a href="https://chromewebstore.google.com/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo" class="btn btn-secondary btn-browser" target="_blank" rel="noopener noreferrer" aria-label="Tampermonkey für Chrome">
                             <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="21.17" y1="8" x2="12" y2="8"/><line x1="3.95" y1="6.06" x2="8.54" y2="14"/><line x1="10.88" y1="21.94" x2="15.46" y2="14"/></svg>
                             Chrome
                         </a>
@@ -1030,7 +1047,12 @@
                             <svg class="icon-fill" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 23c-2.838 0-4.928-1.542-4.928-4.7 0-2.22 1.329-4.544 3.094-6.282V9.38c-.872.322-1.829 1.01-2.383 1.843l-.004-.002C6.71 8.608 5.66 5.6 6.929 2.842 8.673 5.76 11.227 7.404 13.6 7.96c.714-2.657 2.653-4.23 4.476-4.23 1.058 0 2.066.435 2.794 1.192C19.046 3.11 20.2 4.14 20.2 5.92c0 1.416-.77 2.567-1.96 3.318.48.818.74 1.738.74 2.76 0 2.342-1.85 4.23-4.204 4.23-.98 0-1.87-.32-2.57-.86z"/></svg>
                             Firefox
                         </a>
+                        <a href="https://chromewebstore.google.com/detail/violentmonkey/jinjaccalgkegednnccohejagnlnfdag" class="btn btn-secondary btn-browser" target="_blank" rel="noopener noreferrer" aria-label="ViolentMonkey für Brave">
+                            <svg class="icon-fill" viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 3c-1.2.3-2.6 1.1-3.5 2.1-1.5 1.7-2.2 4-1.8 6.3.1.5.3 1 .5 1.5-.8-.2-1.6-.2-2.4 0 .3-.5.5-1 .6-1.5.4-2.3-.3-4.6-1.8-6.3C7.1 4.1 5.7 3.3 4.5 3 2.5 5.5 1.5 8.8 2 12.2c.6 3.8 3.5 7 7.2 8.2 1 .3 2 .5 3 .5s2-.2 3-.5c3.7-1.2 6.6-4.4 7.2-8.2.5-3.4-.5-6.7-2.5-9.2z"/></svg>
+                            Brave
+                        </a>
                     </div>
+                    <p class="cta-manager-note">Chrome: Tampermonkey · Firefox &amp; Brave: ViolentMonkey. ViolentMonkey wird in Chrome wegen Manifest&nbsp;V3 nicht empfohlen.</p>
                 </div>
                 <a href="https://raw.githubusercontent.com/finalish0/GEZ-Channels-Youtube/refs/heads/main/GEZ-frei.user.js" class="btn btn-primary">
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
@@ -1147,9 +1169,9 @@
                         <div class="install-step-num">1</div>
                         <div class="install-step-content">
                             <h4>Userscript-Manager installieren</h4>
-                            <p>Installiere <a href="https://violentmonkey.github.io/" target="_blank" rel="noopener noreferrer">ViolentMonkey</a> — alternativ geht auch <a href="https://www.tampermonkey.net/" target="_blank" rel="noopener noreferrer">Tampermonkey</a>.</p>
+                            <p>Je nach Browser empfehlen wir <a href="https://www.tampermonkey.net/" target="_blank" rel="noopener noreferrer">Tampermonkey</a> (Chrome) oder <a href="https://violentmonkey.github.io/" target="_blank" rel="noopener noreferrer">ViolentMonkey</a> (Firefox &amp; Brave).</p>
                             <div class="install-browser-links">
-                                <a href="https://chromewebstore.google.com/detail/violentmonkey/jinjaccalgkegednnccohejagnlnfdag" class="btn btn-secondary btn-browser" target="_blank" rel="noopener noreferrer" aria-label="ViolentMonkey für Chrome">
+                                <a href="https://chromewebstore.google.com/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo" class="btn btn-secondary btn-browser" target="_blank" rel="noopener noreferrer" aria-label="Tampermonkey für Chrome">
                                     <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="21.17" y1="8" x2="12" y2="8"/><line x1="3.95" y1="6.06" x2="8.54" y2="14"/><line x1="10.88" y1="21.94" x2="15.46" y2="14"/></svg>
                                     Chrome
                                 </a>
@@ -1157,7 +1179,12 @@
                                     <svg class="icon-fill" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 23c-2.838 0-4.928-1.542-4.928-4.7 0-2.22 1.329-4.544 3.094-6.282V9.38c-.872.322-1.829 1.01-2.383 1.843l-.004-.002C6.71 8.608 5.66 5.6 6.929 2.842 8.673 5.76 11.227 7.404 13.6 7.96c.714-2.657 2.653-4.23 4.476-4.23 1.058 0 2.066.435 2.794 1.192C19.046 3.11 20.2 4.14 20.2 5.92c0 1.416-.77 2.567-1.96 3.318.48.818.74 1.738.74 2.76 0 2.342-1.85 4.23-4.204 4.23-.98 0-1.87-.32-2.57-.86z"/></svg>
                                     Firefox
                                 </a>
+                                <a href="https://chromewebstore.google.com/detail/violentmonkey/jinjaccalgkegednnccohejagnlnfdag" class="btn btn-secondary btn-browser" target="_blank" rel="noopener noreferrer" aria-label="ViolentMonkey für Brave">
+                                    <svg class="icon-fill" viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 3c-1.2.3-2.6 1.1-3.5 2.1-1.5 1.7-2.2 4-1.8 6.3.1.5.3 1 .5 1.5-.8-.2-1.6-.2-2.4 0 .3-.5.5-1 .6-1.5.4-2.3-.3-4.6-1.8-6.3C7.1 4.1 5.7 3.3 4.5 3 2.5 5.5 1.5 8.8 2 12.2c.6 3.8 3.5 7 7.2 8.2 1 .3 2 .5 3 .5s2-.2 3-.5c3.7-1.2 6.6-4.4 7.2-8.2.5-3.4-.5-6.7-2.5-9.2z"/></svg>
+                                    Brave
+                                </a>
                             </div>
+                            <p class="install-browser-note">ViolentMonkey wird in Chrome wegen Manifest&nbsp;V3 nicht empfohlen — dort Tampermonkey nutzen.</p>
                         </div>
                     </div>
                     <div class="install-step">
